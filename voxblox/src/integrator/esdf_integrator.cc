@@ -389,6 +389,13 @@ void EsdfIntegrator::processOpenSet() {
       continue;
     }
 
+    Point voxelPoint(global_index.x() * voxel_size_, global_index.y() * voxel_size_, global_index.z() * voxel_size_);
+    if ((voxelPoint - config_.collision_origin).norm() > config_.collision_radius)
+      {
+	voxel->distance = config_.max_distance_m + 0.1;
+	continue;
+      }
+
     Neighborhood<>::getFromGlobalIndex(global_index, &neighbor_indices);
 
     // Go through the neighbors and see if we can update any of them.

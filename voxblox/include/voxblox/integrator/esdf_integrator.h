@@ -75,6 +75,9 @@ class EsdfIntegrator {
      */
     FloatingPoint clear_sphere_radius = 1.5;
     FloatingPoint occupied_sphere_radius = 5.0;
+
+    FloatingPoint collision_radius = 1.5;
+    Point collision_origin;
   };
 
   EsdfIntegrator(const Config& config, Layer<TsdfVoxel>* tsdf_layer,
