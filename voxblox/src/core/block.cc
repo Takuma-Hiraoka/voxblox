@@ -87,6 +87,18 @@ void Block<TsdfVoxel>::deserializeFromIntegers(
     voxel.color.b = static_cast<uint8_t>((bytes_3 & 0x0000FF00) >> 8);
     voxel.color.a = static_cast<uint8_t>(bytes_3 & 0x000000FF);
   }
+
+  // tsdf_mapのpublishは通常、updateされたblockのみをpublishするため、tsdf_mapを受け取ってpointcloudから作ったmapとmergeしてpublishするためにはblock_map_の該当indexがupdateされている必要がある。
+  // https://github.com/ethz-asl/voxblox/blob/master/voxblox_ros/src/tsdf_server.cc#L460-L472
+  // https://github.com/ethz-asl/voxblox/blob/master/voxblox_ros/include/voxblox_ros/conversions_inl.h#L19-L22
+  // https://github.com/ethz-asl/voxblox/blob/master/voxblox/include/voxblox/core/layer.h#L184-L203
+  // 本来、tsdf_mapを受け取ってdeserializeするときに、mergeするならばmergeBlockが呼ばれて、update().set()されてほしい
+  // https://github.com/ethz-asl/voxblox/blob/master/voxblox_ros/include/voxblox_ros/conversions_inl.h#L99
+  // https://github.com/ethz-asl/voxblox/blob/master/voxblox/include/voxblox/core/block_inl.h#L120
+  // ところが、deserializeFromIntegersによって作られるblockはhas_data()がfalseであるため、updateされない。
+  // https://github.com/ethz-asl/voxblox/blob/master/voxblox/include/voxblox/core/block_inl.h#L116-L117
+  // このためdeserializeFromIntegers時にhas_data()をtrueにしておく。
+  set_has_data(true);
 }
 
 template <>

@@ -389,6 +389,7 @@ void EsdfIntegrator::processOpenSet() {
       continue;
     }
 
+    // ロボット周辺のvoxelのみ計算する
     Point voxelPoint(global_index.x() * voxel_size_, global_index.y() * voxel_size_, global_index.z() * voxel_size_);
     if ((voxelPoint - config_.collision_origin).norm() > config_.collision_radius)
       {
